@@ -1,0 +1,51 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: fifthsession.spec.js >> Page Object Modal >> Verify that user can successfully login to the website
+- Location: tests\fifthsession.spec.js:22:5
+
+# Error details
+
+```
+Error: locator.click: Target page, context or browser has been closed
+Call log:
+  - waiting for getByRole('link', { name: 'Delete' })
+
+```
+
+# Test source
+
+```ts
+  1  | import { defineConfig } from '@playwright/test';
+  2  | exports.removeproductfromcartPageClass = class removeproductfromcartloginPageClass{
+  3  |     /** 
+  4  |      * @param {import('@playwright/test').Page} page
+  5  |     */
+  6  |     constructor(page){
+  7  |         this.page = page;
+  8  |         this.addtocartproduct = page.getByRole('link', { name: 'Nokia lumia' });
+  9  |         this.assertaddtocartproduct = page.getByRole('link', { name: 'Add to cart' });
+  10 |         this.buttonaddtocart = page.getByRole('link', { name: 'Add to cart' });
+  11 |         this.gotoaddtocart = page.getByRole('link', { name: 'Cart', exact: true });
+  12 |         this.assertaddtocart2 = page.getByRole('button', { name: 'Place Order' });
+  13 |         this.deleteproductfromcart = page.getByRole('link', { name: 'Delete' });
+  14 |     }
+  15 | 
+  16 |     async AddtoCartonwbesite(){
+  17 |         await this.addtocartproduct.click();
+  18 |           await this.buttonaddtocart.click();
+  19 |           await this.gotoaddtocart.click();
+  20 |        
+  21 |     }
+  22 | 
+  23 |     async deletefromaddtocart(){
+> 24 |         await this.deleteproductfromcart.click();
+     |                                          ^ Error: locator.click: Target page, context or browser has been closed
+  25 |     }
+  26 | }
+```

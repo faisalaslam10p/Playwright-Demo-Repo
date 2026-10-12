@@ -1,0 +1,117 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: thirdsession.spec.js >> Test Structure & CodeGen >> Verify that product is added in the cart
+- Location: tests\thirdsession.spec.js:21:5
+
+# Error details
+
+```
+Test timeout of 30000ms exceeded while running "afterEach" hook.
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - generic:
+          - generic:
+            - generic [ref=e7]:
+              - button "Open Menu" [ref=e8] [cursor=pointer]
+              - img "Open Menu" [ref=e9]
+            - generic [ref=e10]:
+              - navigation [ref=e12]:
+                - button "All Items" [active] [ref=e13] [cursor=pointer]
+                - button "Dynamic Catalog" [ref=e14] [cursor=pointer]: Dynamic Catalog
+                - link "About" [ref=e16] [cursor=pointer]:
+                  - /url: https://saucelabs.com/
+                - button "Logout" [ref=e17] [cursor=pointer]
+                - button "Reset App State" [ref=e18] [cursor=pointer]
+              - generic [ref=e19]:
+                - button "Close Menu" [ref=e20] [cursor=pointer]
+                - img "Close Menu" [ref=e21]
+        - generic [ref=e23]: Swag Labs
+        - button "Cart, 1 items" [ref=e25]:
+          - generic [ref=e26]: "1"
+      - generic [ref=e28]: Your Cart
+    - main [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - generic [ref=e32]: QTY
+          - generic [ref=e33]: Description
+          - generic [ref=e34]:
+            - generic [ref=e35]: "1"
+            - generic [ref=e36]:
+              - button "View details for Sauce Labs Backpack" [ref=e37] [cursor=pointer]:
+                - generic [ref=e38]: Sauce Labs Backpack
+              - generic [ref=e39]: carry.allTheThings() with the sleek, streamlined Sly Pack that melds uncompromising style with unequaled laptop and tablet protection.
+              - generic [ref=e40]:
+                - generic [ref=e41]: $29.99
+                - button "Remove" [ref=e42] [cursor=pointer]
+        - generic [ref=e43]:
+          - button "Continue Shopping" [ref=e44] [cursor=pointer]
+          - button "Checkout" [ref=e45] [cursor=pointer]
+  - contentinfo [ref=e46]:
+    - list [ref=e47]:
+      - listitem [ref=e48]:
+        - link "X" [ref=e49] [cursor=pointer]:
+          - /url: https://x.com/saucelabs
+      - listitem [ref=e50]:
+        - link "Facebook" [ref=e51] [cursor=pointer]:
+          - /url: https://www.facebook.com/saucelabs
+      - listitem [ref=e52]:
+        - link "LinkedIn" [ref=e53] [cursor=pointer]:
+          - /url: https://www.linkedin.com/company/sauce-labs/
+    - generic [ref=e54]: © 2026 Sauce Labs. All Rights Reserved. Terms of Service | Privacy Policy
+```
+
+# Test source
+
+```ts
+  1  | const {test, expect} = require ('@playwright/test');
+  2  | const { Console } = require ('console');
+  3  | 
+  4  | test.describe('Test Structure & CodeGen',() =>{
+  5  |     test.beforeEach('Login to the appliciton', async({page})=>{
+  6  |         await page.goto('https://www.saucedemo.com/');
+  7  |         await page.locator('#user-name').click();
+  8  |         await page.locator('#user-name').fill('standard_user');
+  9  |         await page.getByPlaceholder('Password').click();
+  10 |         await page.getByPlaceholder('Password').fill('secret_sauce');
+  11 |         await page.locator('#login-button').click();
+  12 |         
+  13 | 
+  14 |     });    
+  15 | 
+> 16 |     test.afterEach('Logout from the application', async ({page})=>{
+     |          ^ Test timeout of 30000ms exceeded while running "afterEach" hook.
+  17 |         await page.getByRole('button', { name: 'Open Menu' }).click();
+  18 |         await page.getByRole('link', { name: 'Logout' }).click();
+  19 |     });
+  20 | 
+  21 |     test('Verify that product is added in the cart', async ({page})=> {
+  22 |         await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click();
+  23 |         await page.locator('a').filter({ hasText: '1' }).click();
+  24 |         //Assertion
+  25 |         await expect(page.getByText('Sauce Labs Backpackcarry.')).toBeVisible();
+  26 |     });
+  27 | 
+  28 |     test('Verify that there is no product displayed after removing the product from Card', async ({page})=> {
+  29 |         await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click();
+  30 |         await page.locator('a').filter({ hasText: '1' }).click();
+  31 |         //Assertion
+  32 |         await expect(page.getByText('Sauce Labs Backpackcarry.')).toBeVisible()
+  33 |         await page.locator('[data-test="remove-sauce-labs-backpack"]').click();
+  34 |         //Assertion
+  35 |         await expect(page.locator('[data-test="continue-shopping"]')).toBeVisible();
+  36 |     });
+  37 | });
+```
