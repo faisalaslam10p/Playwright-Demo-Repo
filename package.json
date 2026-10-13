@@ -7,7 +7,9 @@
     "test": "npx playwright test",
     "test-chrome": "npx playwright test --headed --project=chromium",
     "test-firefox": "npx playwright test --project-firefox",
-    "single-test": "npx playwright test example"
+    "single-test": "npx playwright test example",
+    "allure:generate": "allure generate allure-results-generated --clean -o allure-report-generated",
+    "allure:open": "allure open allure-report-generated"
   },
   "keywords": [],
   "author": "",

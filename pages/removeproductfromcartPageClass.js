@@ -15,11 +15,14 @@ exports.removeproductfromcartPageClass = class removeproductfromcartloginPageCla
 
     async AddtoCartonwbesite(){
         await this.addtocartproduct.click();
+        await this.page.waitForTimeout(1000);
         const dialogPromise = this.page.waitForEvent('dialog');
         await this.buttonaddtocart.click();
         const dialog = await dialogPromise;
         await dialog.accept();
+        await this.page.waitForTimeout(1000);
         await this.gotoaddtocart.click();
+        await this.page.waitForTimeout(1000);
         await this.deleteproductfromcart.waitFor({ state: 'visible' });
        
     }

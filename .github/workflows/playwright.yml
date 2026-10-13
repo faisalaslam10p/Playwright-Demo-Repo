@@ -31,13 +31,36 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
+        id: playwright_tests
         run: npx playwright test
-      - name: Upload HTML Report Artifact
-        uses: actions/upload-pages-artifact@v3
-        if: always()
+
+      - name: Set up Java for Allure
+        if: always() && steps.playwright_tests.outcome != 'skipped'
+        uses: actions/setup-java@v4
         with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Generate Allure HTML report
+        id: allure_report
+        if: always() && steps.playwright_tests.outcome != 'skipped'
+        run: npm run allure:generate
+
+      - name: Upload Playwright HTML report
+        if: always() && steps.playwright_tests.outcome != 'skipped'
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report
           path: playwright-report/
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload Allure report to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        if: always() && steps.allure_report.outcome == 'success'
+        with:
+          path: allure-report-generated/
       - name: Deploy to GitHub Pages
         id: deployment
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && steps.allure_report.outcome == 'success'
         uses: actions/deploy-pages@v4
