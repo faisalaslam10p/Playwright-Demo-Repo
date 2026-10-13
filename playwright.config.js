@@ -26,7 +26,7 @@ module.exports = defineConfig({
     [
       'allure-playwright',
       {
-        outputFolder: 'allure-results-generated',
+        outputFolder: 'allure-results',
         detail: true,
         suiteTitle: true,
       },
