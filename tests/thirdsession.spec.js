@@ -1,37 +1,25 @@
-const {test, expect} = require ('@playwright/test');
-const { Console } = require ('console');
+const { test, expect } = require('@playwright/test');
 
-test.describe('Test Structure & CodeGen',() =>{
-    test.beforeEach('Login to the appliciton', async({page})=>{
+test.describe('Test Structure & CodeGen', () => {
+    test.beforeEach('Login to the application', async ({ page }) => {
         await page.goto('https://www.saucedemo.com/');
-        await page.locator('#user-name').click();
         await page.locator('#user-name').fill('standard_user');
-        await page.getByPlaceholder('Password').click();
-        await page.getByPlaceholder('Password').fill('secret_sauce');
+        await page.locator('#password').fill('secret_sauce');
         await page.locator('#login-button').click();
-        
-
-    });    
-
-    test.afterEach('Logout from the application', async ({page})=>{
-        await page.getByRole('button', { name: 'Open Menu' }).click();
-        await page.getByRole('link', { name: 'Logout' }).click();
+        await expect(page).toHaveURL(/\/inventory\.html$/);
     });
 
-    test('Verify that product is added in the cart', async ({page})=> {
+    test('Verify that product is added in the cart', async ({ page }) => {
         await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click();
-        await page.locator('a').filter({ hasText: '1' }).click();
-        //Assertion
-        await expect(page.getByText('Sauce Labs Backpackcarry.')).toBeVisible();
+        await page.locator('.shopping_cart_link').click();
+        await expect(page.getByText('Sauce Labs Backpack', { exact: true })).toBeVisible();
     });
 
-    test('Verify that there is no product displayed after removing the product from Card', async ({page})=> {
+    test('Verify that there is no product displayed after removing the product from Card', async ({ page }) => {
         await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click();
-        await page.locator('a').filter({ hasText: '1' }).click();
-        //Assertion
-        await expect(page.getByText('Sauce Labs Backpackcarry.')).toBeVisible()
+        await page.locator('.shopping_cart_link').click();
+        await expect(page.getByText('Sauce Labs Backpack', { exact: true })).toBeVisible();
         await page.locator('[data-test="remove-sauce-labs-backpack"]').click();
-        //Assertion
-        await expect(page.locator('[data-test="continue-shopping"]')).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Continue Shopping' })).toBeVisible();
     });
 });
