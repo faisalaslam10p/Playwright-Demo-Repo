@@ -29,7 +29,7 @@ module.exports =  {
     },
     UpdateData :{
         "firstname" : "Faisal",
-        "lastname" : "Zaman",
+        "lastname" : "Aslam",
         "totalprice" : 1500,
         "depositpaid" : true,
         "bookingdates" : {
